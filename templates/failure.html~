@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Failure</title>
+  </head>
+  <body>
+    <h1>Login Unsuccessful</h1>
+    <h4>Please Try Again</h4>
+    <form action="/login/">
+      <input type="submit" value="Go">
+    </form>
+    

@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Forms</title>
+    
+  </head>
+
+  <body>
+    <h1>My wonderful textbox:</h1>
+    <form action="/authenticate/">
+      <input type="text" size="20" value="" name="user">
+      <input type="submit" size="10">
+    </form>
+  </body>
+
+</html>
