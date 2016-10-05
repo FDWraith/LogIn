@@ -7,10 +7,12 @@
 
   <body>
     <h1>Login Please:</h1>
+    <h4>{{message}}</h4>
     <form action="/authenticate/" method="POST">
       <p>Username:</p><input type="text" size="20" value="" name="user"><br>
       <p>Password:</p><input type="password" size="20" name="pass"><br>
-      <input type="submit" size="10">
+      <input type="submit" size="10" value="Login" name="Choice">
+      <input type="submit" size="10" value="Register" name="Choice">
     </form>
   </body>
 
