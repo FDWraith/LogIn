@@ -29,7 +29,7 @@ def authen(form):
     user = form['user']
     pw = form['pass']
     if(user in usernames):
-        if(hash(pw) == passwords[usernames.find(user)]):
+        if(hash(pw) == passwords[usernames.index(user)]):
             return render_template("success.html")
         else:
             return render_template("form.html", message="Bad Password")
