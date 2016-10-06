@@ -2,18 +2,22 @@
 <html>
   <head>
     <title>Forms</title>
-    
+    <link rel="stylesheet" href="../static/style.css" type="text/css">
   </head>
 
   <body>
-    <h1>Login Please:</h1>
-    <h4>{{message}}</h4>
-    <form action="/authenticate/" method="POST">
-      <p>Username:</p><input type="text" size="20" value="" name="user"><br>
-      <p>Password:</p><input type="password" size="20" name="pass"><br>
-      <input type="submit" size="10" value="Login" name="Choice">
-      <input type="submit" size="10" value="Register" name="Choice">
-    </form>
+    <center>
+      <div class="body">
+	<h1>Login Please:</h1>
+	<h3>{{message}}</h3>
+	<form action="/authenticate/" method="POST">
+	  <h4>Username:</h4><br><input class="textbox" type="text" size="20" value="" name="user"><br>
+	  <h4>Password:</h4><br><input class="textbox" type="password" size="20" name="pass"><br>
+	  <input class="button" type="submit" size="10" value="Login" name="Choice">
+	  <input class="button" type="submit" size="10" value="Register" name="Choice">
+	</form>
+      </div>
+    </center>
   </body>
-
+  
 </html>
