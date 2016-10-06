@@ -1,11 +1,20 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 import hashlib
-
+ 
 app = Flask(__name__)
+app.secret_key = "hello"
+
 
 @app.route("/")
-@app.route("/login/")
 def home():
+    if('user' not in session.keys()):
+        return redirect(url_for('login'))
+    else:
+        return render_template("home.html")
+
+    
+@app.route("/login/")
+def login():
     return render_template("form.html")
 
 @app.route("/authenticate/", methods = ["POST"])
@@ -15,22 +24,25 @@ def auth():
     elif(request.form['Choice'] == 'Register'):
         return regis(request.form)
     else:
-        return home()
+        return login()
 
 def authen(form):
     credentials = open("./data/credentials.csv", "r")
     usernames = []
     passwords = []
+    #print credentials.readlines()
     for i in credentials.readlines():
-        splitData = i.split(",")
-        usernames.append(splitData[0])
-        passwords.append(splitData[1])
+        if( i != '\n'):
+            splitData = i.strip('\n').split(",")
+            usernames.append(splitData[0])
+            passwords.append(splitData[1])
     credentials.close()
     user = form['user']
     pw = form['pass']
-    if(user in usernames):
+    if user in usernames:
         if(hash(pw) == passwords[usernames.index(user)]):
-            return render_template("success.html")
+            session['user'] = user
+            return redirect(url_for('home'))
         else:
             return render_template("form.html", message="Bad Password")
     else:
@@ -42,13 +54,18 @@ def regis(form):
     credentials = open("./data/credentials.csv", "r")
     usernames = []
     passwords = []
+    #print credentials.readlines()
     for i in credentials.readlines():
-        splitData = i.split(",")
-        usernames.append(splitData[0])
-        passwords.append(splitData[1])
+        if( i != '\n'):
+            splitData = i.strip("\n").split(",")
+            #print splitData
+            usernames.append(splitData[0])
+            passwords.append(splitData[1])
     credentials.close();
     user = form['user']
-    if(user in usernames):
+    #print user
+    #print usernames
+    if user in usernames:
         credentials.close()
         return render_template("form.html", message="Username Already Taken")
     else:
@@ -68,3 +85,4 @@ def hash(string):
 if(__name__ == "__main__"):
     app.debug = True;
     app.run()
+
