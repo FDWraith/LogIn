@@ -7,7 +7,14 @@ app.secret_key = "hello"
 
 @app.route("/")
 def home():
-    if('user' not in session.keys()):
+    credentials = open("./data/credentials.csv", "r")
+    usernames = []
+    for i in credentials.readlines():
+        if( i != '\n'):
+            splitData = i.strip('\n').split(",")
+            usernames.append(splitData[0])
+    credentials.close()
+    if('user' not in session.keys() or  session['user'] not in usernames):
         return redirect(url_for('login'))
     else:
         return render_template("home.html")
@@ -20,17 +27,22 @@ def login():
 @app.route("/authenticate/", methods = ["POST"])
 def auth():
     if(request.form['Choice'] == 'Login'):
-        return  authen(request.form)
+        return authen(request.form)
     elif(request.form['Choice'] == 'Register'):
         return regis(request.form)
     else:
         return login()
 
+@app.route("/logout/")
+def logout():
+    session['user'] = ''
+    return redirect(url_for("home"))
+
+    
 def authen(form):
     credentials = open("./data/credentials.csv", "r")
     usernames = []
     passwords = []
-    #print credentials.readlines()
     for i in credentials.readlines():
         if( i != '\n'):
             splitData = i.strip('\n').split(",")
@@ -47,24 +59,18 @@ def authen(form):
             return render_template("form.html", message="Bad Password")
     else:
         return render_template("form.html", message="Bad Username")
-    
-    #return render_template("failure.html", result="Bad Result")
 
 def regis(form):
     credentials = open("./data/credentials.csv", "r")
     usernames = []
     passwords = []
-    #print credentials.readlines()
     for i in credentials.readlines():
         if( i != '\n'):
             splitData = i.strip("\n").split(",")
-            #print splitData
             usernames.append(splitData[0])
             passwords.append(splitData[1])
     credentials.close();
     user = form['user']
-    #print user
-    #print usernames
     if user in usernames:
         credentials.close()
         return render_template("form.html", message="Username Already Taken")
