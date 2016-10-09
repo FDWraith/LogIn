@@ -40,15 +40,9 @@ def logout():
 
     
 def authen(form):
-    credentials = open("./data/credentials.csv", "r")
-    usernames = []
-    passwords = []
-    for i in credentials.readlines():
-        if( i != '\n'):
-            splitData = i.strip('\n').split(",")
-            usernames.append(splitData[0])
-            passwords.append(splitData[1])
-    credentials.close()
+    data = extractData()
+    usernames = data[0]
+    passwords = data[1]
     user = form['user']
     pw = form['pass']
     if user in usernames:
@@ -61,6 +55,19 @@ def authen(form):
         return render_template("form.html", message="Bad Username")
 
 def regis(form):
+    data = extractData()
+    usernames = data[0]
+    user = form['user']
+    if user in usernames:
+        credentials.close()
+        return render_template("form.html", message="Username Already Taken")
+    else:
+        addUser(user,data)
+        return render_template("form.html", message="Account Registration Successful")
+
+def hash(string):
+    return hashlib.md5(string).hexdigest()
+def extractData():
     credentials = open("./data/credentials.csv", "r")
     usernames = []
     passwords = []
@@ -70,23 +77,17 @@ def regis(form):
             usernames.append(splitData[0])
             passwords.append(splitData[1])
     credentials.close();
-    user = form['user']
-    if user in usernames:
-        credentials.close()
-        return render_template("form.html", message="Username Already Taken")
-    else:
-        usernames.append(user)
-        passwords.append(hash(form['pass']))
-        credentials = open("./data/credentials.csv", "w")
-        for i in range(len(usernames)):
-            credentials.write(usernames[i] + "," + passwords[i] + "\n")
-        credentials.close()
-        return render_template("form.html", message="Account Registration Successful")
-
-def hash(string):
-    return hashlib.md5(string).hexdigest()
-
-    
+    data = [usernames, passwords ]
+    return data;
+def addUser(user,dataList):
+    usernames = dataList[0];
+    passwords = dataList[1];
+    usernames.append(user)
+    passwords.append(hash(form['pass']))
+    credentials = open("./data/credentials.csv", "w")
+    for i in range(len(usernames)):
+        credentials.write(usernames[i] + "," + passwords[i] + "\n")
+    credentials.close()
     
 if(__name__ == "__main__"):
     app.debug = True;
